@@ -22,7 +22,7 @@ app.param("collectionName", (req, res, next, collectionName) => {
 app.get("/collection/:collectionName", (req, res, next) => {
   req.collection.find({}).toArray((e, results) => {
     if (e) return next(e);
-    res.send(results);
+    res.send(JSON.stringify(results));
   });
 });
 
