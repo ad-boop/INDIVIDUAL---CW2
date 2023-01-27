@@ -4,7 +4,27 @@ var app = express();
 // Requires the modules needed
 var path = require("path");
 var fs = require("fs");
+const MongoClient = require("mongodb").MongoClient;
 
+let db;
+MongoClient.connect(
+  "mongodb+srv://adora:1234@getting-started.i2rya2y.mongodb.net",
+  (err, client) => {
+    db = client.db("schoolPlanner");
+  }
+);
+
+app.param("collectionName", (req, res, next, collectionName) => {
+  req.collection = db.collection(collectionName);
+  return next();
+});
+
+app.get("/collection/:collectionName", (req, res, next) => {
+  req.collection.find({}).toArray((e, results) => {
+    if (e) return next(e);
+    res.send(results);
+  });
+});
 
 // static file middlewear
 app.use(function (req, res, next) {
@@ -22,11 +42,10 @@ app.use(function (req, res, next) {
   });
 });
 
-
 // the 'logger' middleware
 app.use(function (req, res, next) {
   console.log("Request IP: " + req.url);
-//   console.log("Request date: " + newDate());
+  //   console.log("Request date: " + newDate());
   next();
 });
 
