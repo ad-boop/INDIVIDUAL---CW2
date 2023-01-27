@@ -98,7 +98,7 @@ img.logo-img {
 /* BANNER STYLING */
 .banner {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url("images/banner.jpg");
+    url("static/banner.jpg");
   height: 700px;
   background-position: center;
   background-repeat: no-repeat;

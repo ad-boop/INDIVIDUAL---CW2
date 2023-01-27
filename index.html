@@ -355,7 +355,7 @@
 
     <!---------------------------------------- JS FOR WEBSITE--------------------------------------------- -->
     <!-- CALLING THE JS CONTAINING THE LESSONS JSON OBJECT -->
-    <script src="lesson.js"></script>
+    <script></script>
 
     <script type="text/javascript">
       // vue js
@@ -364,7 +364,7 @@
       let app = new Vue({
         el: "#app",
         data: {
-          lessons_list: lessons, //lessons from lesson.js
+          lessons_list: {}, //lessons from lesson.js
           cart: [], //added lessons to the cart
 
           checkout: {
@@ -399,15 +399,24 @@
           searchInput: "", //data from the search bar
         },
 
+        created: function () {
+          // this function will be run automatically
+          // when creating the Vue instance
+          fetch("http://localhost:3000/collection/lessons").then(function (response) {
+            response.json().then(function (json) {
+              // save the returned JSON object to 'school.lessons';
+              this.lessons_list = json;
+              console.log(json)
+            });
+          });
+        },
+
         methods: {
           // toggles between checkout page and lesson page when button clicked
           showCheckoutPage() {
             this.showLessons = this.showLessons ? false : true;
           },
-          //If cart is empty, takes user back to products page
-          // showLessonPage(){
-          //       this.showLessons = this.showLessons ? false : true;
-          //   },
+          
 
           // add to cart function
           addToCart(lesson) {
