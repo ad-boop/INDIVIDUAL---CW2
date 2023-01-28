@@ -20,9 +20,12 @@ app.param("collectionName", (req, res, next, collectionName) => {
 });
 
 app.get("/collection/:collectionName", (req, res, next) => {
+  
   req.collection.find({}).toArray((e, results) => {
     if (e) return next(e);
-    res.send(JSON.stringify(results));
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.writeHead(200, {'Content-Type' : 'text/plain'});
+    res.end(JSON.stringify(results));
   });
 });
 
@@ -44,7 +47,10 @@ app.use(function (req, res, next) {
 
 // the 'logger' middleware
 app.use(function (req, res, next) {
+  // res.setHeader('Access-Control-Allow-Origin', '*');
+  // res.writeHead(200, {'Content-Type' : 'text/plain'});
   console.log("Request IP: " + req.url);
+  res.status(404).send("Page not found. Enter /lessons  or /user");
   //   console.log("Request date: " + newDate());
   next();
 });
