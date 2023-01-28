@@ -167,6 +167,7 @@
           </div>
         </div>
 
+        <p v-for="lesson in lessons_list"></p>
         <!---------------------------------- Lessons display SECTION---------------------------------- -->
         <div class="lessons-div" id="lessons-div" v-if="showLessons">
           <!-- lesson product boxess -->
@@ -354,8 +355,7 @@
     <!-------------------FOOTER END----------------->
 
     <!---------------------------------------- JS FOR WEBSITE--------------------------------------------- -->
-    <!-- CALLING THE JS CONTAINING THE LESSONS JSON OBJECT -->
-    <script></script>
+    
 
     <script type="text/javascript">
       // vue js
@@ -364,7 +364,7 @@
       let app = new Vue({
         el: "#app",
         data: {
-          lessons_list: {}, //lessons from lesson.js
+          lessons_list: [], //lessons from lesson.js
           cart: [], //added lessons to the cart
 
           checkout: {
@@ -405,12 +405,25 @@
           fetch("http://localhost:3000/collection/lessons").then(function (response) {
             response.json().then(function (json) {
               // save the returned JSON object to 'school.lessons';
-              this.lessons_list = json;
-              console.log(json)
+              app.lessons_list = json;
+              console.log(app.lessons_list)
+              // console.log(json)
             });
           });
+
+          function postOrder(){
+          fetch("http://localhost:3000/collection/orders",{method:"post"}).then(function (response) {
+            response.json().then(function (json) {
+              // save the returned JSON object to 'school.lessons';
+              app.lessons_list = json;
+              console.log(app.lessons_list)
+              // console.log(json)
+            });
+          });
+        }
         },
 
+        
         methods: {
           // toggles between checkout page and lesson page when button clicked
           showCheckoutPage() {
@@ -564,6 +577,7 @@
 
           //   search function
           filteredLessonList: function () {
+            console.log(this.sortedLessons);
             return this.sortedLessons.filter((post) => {
               return (
                 post.subject
