@@ -1,10 +1,25 @@
 var express = require("express");
 var app = express();
-
 // Requires the modules needed
 var path = require("path");
 var fs = require("fs");
 const MongoClient = require("mongodb").MongoClient;
+
+
+app.use(express.json());
+app.set('port', 3000)
+
+//logger middleware. Logs all the incoming requests
+app.use(function(req, res, next) {
+    console.log("In comes a " + req.method + " request to " + req.url);
+    next();
+})
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.setHeader("Access-Control-Allow-Methods","GET, POST, PATCH, PUT, DELETE, OPTIONS")
+    next();
+});
 
 let db;
 MongoClient.connect(
@@ -13,6 +28,11 @@ MongoClient.connect(
     db = client.db("schoolPlanner");
   }
 );
+
+
+app.get('/', (req, res, next) => {
+  res.send('Select a collection, e.g., /collectionName');
+});
 
 app.param("collectionName", (req, res, next, collectionName) => {
   req.collection = db.collection(collectionName);
@@ -23,11 +43,22 @@ app.get("/collection/:collectionName", (req, res, next) => {
   
   req.collection.find({}).toArray((e, results) => {
     if (e) return next(e);
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.writeHead(200, {'Content-Type' : 'text/plain'});
-    res.end(JSON.stringify(results));
+    res.send(JSON.stringify(results));
   });
 });
+
+
+
+app.post("/collection/:collectionName", (req, res, next) => {
+  req.collection.insertOne(req.body, (e, results) => {
+    if (e) return next(e);
+    // object identifier
+    res.send(results.ops);
+    console.log(results)
+  });
+});
+
+
 
 // static file middlewear
 app.use(function (req, res, next) {
@@ -45,17 +76,17 @@ app.use(function (req, res, next) {
   });
 });
 
-// the 'logger' middleware
-app.use(function (req, res, next) {
-  // res.setHeader('Access-Control-Allow-Origin', '*');
-  // res.writeHead(200, {'Content-Type' : 'text/plain'});
-  console.log("Request IP: " + req.url);
-  res.status(404).send("Page not found. Enter /lessons  or /user");
-  //   console.log("Request date: " + newDate());
-  next();
+
+//If an image does not exist in the static folder, the error message is displayed.
+app.use(function(req, res){
+  res.status(404);
+  res.send("File not Found! try again...");
+});   
+
+//deploying the server
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+console.log("Server running...");
 });
 
-// Starts the app on port 3000 and display a message when it’s started
-app.listen(3000, function () {
-  console.log("App started on port 3000");
-});
+
