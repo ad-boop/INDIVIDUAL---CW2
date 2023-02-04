@@ -136,13 +136,6 @@
             <div class="sort-order-div">
               <h4>SORT ORDER:</h4>
 
-              <!-- DROP DOWN FOR ORDER -->
-              <!-- <select name="sort-order" id="sort-order" v-model="sort.sortOrder">
-                        <option value="">No Order</option> -->
-              <!-- looping all the sort order -->
-              <!-- <option v-for="(sortOrder, key) in sort.order" v-bind:value="sortOrder" style="text-transform: capitalize;">{{key}}</option>
-                    </select> -->
-
               <div
                 v-for="(sortOrder, key) in sort.order"
                 style="align-items: center; text-align: center"
@@ -205,6 +198,7 @@
                   </span>
                 </div>
               </div>
+
               <!-- lesson details -->
               <div class="column right lesson-details">
                 <div id="lesson-description">
@@ -355,16 +349,13 @@
     <!-------------------FOOTER END----------------->
 
     <!---------------------------------------- JS FOR WEBSITE--------------------------------------------- -->
-    
-
     <script type="text/javascript">
       // vue js
-
       //   creating vue instance
       let app = new Vue({
         el: "#app",
         data: {
-          lessons_list: [], //lessons from lesson.js
+          lessons_list: [], //lessons from lessons collections
           cart: [], //added lessons to the cart
 
           checkout: {
@@ -402,34 +393,23 @@
         created: function () {
           // this function will be run automatically
           // when creating the Vue instance
-          fetch("http://localhost:3000/collection/lessons").then(function (response) {
+          fetch("http://localhost:3000/collection/lessons").then(function (
+            response
+          ) {
             response.json().then(function (json) {
               // save the returned JSON object to 'school.lessons';
               app.lessons_list = json;
-              console.log(app.lessons_list)
+              console.log(app.lessons_list);
               // console.log(json)
             });
           });
-
-          function postOrder(){
-          fetch("http://localhost:3000/collection/orders",{method:"post"}).then(function (response) {
-            response.json().then(function (json) {
-              // save the returned JSON object to 'school.lessons';
-              app.lessons_list = json;
-              console.log(app.lessons_list)
-              // console.log(json)
-            });
-          });
-        }
         },
 
-        
         methods: {
           // toggles between checkout page and lesson page when button clicked
           showCheckoutPage() {
             this.showLessons = this.showLessons ? false : true;
           },
-          
 
           // add to cart function
           addToCart(lesson) {
@@ -499,7 +479,9 @@
             // if there are items in the cart
             if (this.cart.length > 0 && this.checkout.error_message == "") {
               alert("Order Submitted!");
-              location.reload();
+              addOrder(this.checkout.name,this.checkout.phone_number,this.cart);
+              
+              // location.reload();
             }
             // if there are no items in the cart
             else if (this.cart.length == 0) {
@@ -512,6 +494,28 @@
               this.checkout.error_message = "";
               this.checkout.name = "";
               this.checkout.phone_number = "";
+            }
+
+
+            function addOrder(name,phone_number,orders){
+              let orderData = {"name":name,"phone_number":phone_number,"orders":orders};
+              console.log(orderData);
+              // set the url to your server and route
+              
+              //POST request to add the order to the database.
+              fetch("http://localhost:3000/collection/orders", {
+                method: 'POST',
+                headers: {
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+                  "Access-Control-Allow-Credentials": true
+                },
+                body: JSON.stringify(orderData),
+              }).then(response => response.text()).then(responseJSON => {
+                console.log(orderData);
+              });
+
             }
           },
         },
