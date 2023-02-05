@@ -1,3 +1,4 @@
+const { request } = require('express');
 var express = require("express");
 var app = express();
 // Requires the modules needed
@@ -16,8 +17,6 @@ app.use(function(req, res, next) {
 })
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', '*');
-    res.setHeader("Access-Control-Allow-Methods","GET, POST, PATCH, PUT, DELETE, OPTIONS")
     next();
 });
 
@@ -40,7 +39,6 @@ app.param("collectionName", (req, res, next, collectionName) => {
 });
 
 app.get("/collection/:collectionName", (req, res, next) => {
-  
   req.collection.find({}).toArray((e, results) => {
     if (e) return next(e);
     res.send(JSON.stringify(results));
@@ -54,7 +52,7 @@ app.post("/collection/:collectionName", (req, res, next) => {
     if (e) return next(e);
     // object identifier
     res.send(results.ops);
-    console.log(results)
+    console.log(req.body)
   });
 });
 
