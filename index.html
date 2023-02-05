@@ -499,12 +499,51 @@
 
             function addOrder(name,phone_number,orders){
               let orderData = {"name":name,"phone_number":phone_number,"orders":orders};
+              for (let i = 0; i < orders.length; i++) {
+                console.log(orders[i]._id,orders[i].space);
+                
+              }
+              
               console.log(orderData);
               // set the url to your server and route
               
               //POST request to add the order to the database.
-              fetch("http://localhost:3000/collection/orders", {
-                method: 'POST',
+            
+                fetch("http://localhost:3000/collection/orders", {
+                      method: 'POST',
+                      headers: {
+                          "Content-Type": "application/json",
+                          // "Access-Control-Allow-Origin": "*",
+                          // "Access-Control-Allow-Methods": "POST",
+                          // "Access-Control-Allow-Credentials": true
+                      },
+                      // mode:"no-cors",
+                      body: JSON.stringify(orderData),
+                  }).then(response => response.text()).then(responseJSON => {
+                      //updateLessons(orders);
+                      console.log(orderData)
+                  });
+                
+              
+            }
+
+            function updateLessons(lessons){
+
+              const updatedLessons=[];
+              for(i=0;i<lessons.length;i++){
+                if(lessons.length===0){
+                    const error="Cant do it";
+                }
+                else{
+                    const lessons={"_id":lessons[i]._id,"space":lesson[i].space}
+                    console.log(lessons)
+                    updateLessons.push(lessons);
+                }
+              }
+
+              //POST request to add the order to the database.
+              fetch("http://localhost:3000/collection/lessons/", {
+                method: 'PUT',
                 headers: {
                   "Content-Type": "application/json",
                   "Access-Control-Allow-Origin": "*",
@@ -512,7 +551,7 @@
                   "Access-Control-Allow-Credentials": true
                 },
                 body: JSON.stringify(orderData),
-              }).then(response => response.text()).then(responseJSON => {
+              }).then(response => response.json()).then(responseJSON => {
                 console.log(orderData);
               });
 
