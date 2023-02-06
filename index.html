@@ -497,15 +497,8 @@
             }
 
 
-            function addOrder(name,phone_number,orders){
-              let orderData = {"name":name,"phone_number":phone_number,"orders":orders};
-              for (let i = 0; i < orders.length; i++) {
-                console.log(orders[i]._id,orders[i].space);
-                
-              }
-              
-              console.log(orderData);
-              // set the url to your server and route
+            function addOrder(name,phone_number,orderedItems){
+              let orderData = {"name":name,"phone_number":phone_number,"orderedItems":orderedItems};
               
               //POST request to add the order to the database.
             
@@ -520,8 +513,7 @@
                       // mode:"no-cors",
                       body: JSON.stringify(orderData),
                   }).then(response => response.text()).then(responseJSON => {
-                      //updateLessons(orders);
-                      console.log(orderData)
+                      updateLessons(orderedItems);
                   });
                 
               
@@ -531,30 +523,29 @@
 
               const updatedLessons=[];
               for(i=0;i<lessons.length;i++){
+                console.log(lessons);
                 if(lessons.length===0){
                     const error="Cant do it";
                 }
                 else{
-                    const lessons={"_id":lessons[i]._id,"space":lesson[i].space}
-                    console.log(lessons)
-                    updateLessons.push(lessons);
+                    const lessons_items={"_id":lessons[i]._id,"space":lessons[i].space}
+                    console.log(lessons_items)
+                    // const id=new ObjectID(lessons[i]._id);
+                    // updateLessons.push(lessons_items);
+
+                    //POST request to add the order to the database.
+                    fetch("http://localhost:3000/collection/lessons/"+lessons[i]._id, {
+                          method: 'PUT',
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({"space":lessons[i].space}),
+                        }).then(response => response.json()).then(responseJSON => {
+                          // console.log(orderData);
+                        });
+                      }
                 }
-              }
-
-              //POST request to add the order to the database.
-              fetch("http://localhost:3000/collection/lessons/", {
-                method: 'PUT',
-                headers: {
-                  "Content-Type": "application/json",
-                  "Access-Control-Allow-Origin": "*",
-                  "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
-                  "Access-Control-Allow-Credentials": true
-                },
-                body: JSON.stringify(orderData),
-              }).then(response => response.json()).then(responseJSON => {
-                console.log(orderData);
-              });
-
+              console.log(updateLessons);
             }
           },
         },
