@@ -1,5 +1,6 @@
 var express = require("express");
 var app = express();
+var cors = require('cors')
 // Requires the modules needed
 var path = require("path");
 var fs = require("fs");
@@ -7,6 +8,7 @@ const MongoClient = require("mongodb").MongoClient;
 
 
 app.use(express.json());
+app.use(cors());
 app.set('port', 3000)
 
 //logger middleware. Logs all the incoming requests
@@ -56,6 +58,15 @@ app.post("/collection/:collectionName", (req, res, next) => {
 });
 
 
+const ObjectID = require('mongodb').ObjectID;
+//GET request to find a collection with a given ID
+app.get('/collection/:collectionName/:id', (req, res, next) => {
+  req.collection.findOne({ _id: new ObjectID(req.params.id) }, (e, result) => {
+  if (e) return next(e)
+  res.send(result)
+  })
+  })
+
 app.put("/collection/:collectionName/:id", (req, res, next) => {
   req.collection.update(
     { _id: new ObjectID(req.params.id) },
@@ -63,11 +74,18 @@ app.put("/collection/:collectionName/:id", (req, res, next) => {
     { safe: true, multi: false },
     (e, result) => {
       if (e) return next(e);
-      res.send(result.result === 1 ? { msg: "success" } : { msg: "error" });
+      res.send(result.modifiedCount === 1 ? { msg: "success" } : { msg: "error" });
     }
   );
 });
 
+
+app.get('/collection/:collectionName/:search', (req, res, next) => {
+  req.collection.findOne({ subject: new ObjectID(req.params.id) }, (e, result) => {
+  if (e) return next(e)
+  res.send(result)
+  })
+  })
 
 
 // static file middlewear
