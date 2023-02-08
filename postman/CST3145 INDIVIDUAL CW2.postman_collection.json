@@ -1,0 +1,88 @@
+{
+	"info": {
+		"_postman_id": "1c87a8f0-c380-4fb4-bb27-ccafec0b5810",
+		"name": "CST3145 INDIVIDUAL CW2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get all lessons",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/collection/lessons",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"collection",
+						"lessons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "adding orders using post request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"fernandes\",\r\n    \"phone_number\":12339494,\r\n    \"ordered_items\":[\r\n        {\r\n            \"id\":123,\r\n            \"subject\":\"Science\",\r\n            \"location\":\"York\",\r\n            \"price\":100,\r\n            \"image\":\"static/science.jpg\",\r\n            \"rating\":4\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/collection/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"collection",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update lessons space using put",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"location\":\"York\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/collection/lessons/63d39d25f1b2c3a90147697a",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"collection",
+						"lessons",
+						"63d39d25f1b2c3a90147697a"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
