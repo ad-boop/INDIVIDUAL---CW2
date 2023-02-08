@@ -160,88 +160,170 @@
           </div>
         </div>
 
-        <p v-for="lesson in lessons_list"></p>
+        
         <!---------------------------------- Lessons display SECTION---------------------------------- -->
         <div class="lessons-div" id="lessons-div" v-if="showLessons">
           <!-- lesson product boxess -->
-          <div
-            id="lesson-box"
-            v-for="lesson in filteredLessonList"
-            :key="lesson.id"
-          >
-            <div id="row">
-              <!-- lesson image -->
-              <div class="column left lesson-icon">
-                <figure>
-                  <img
-                    class="lesson-pic"
-                    v-bind:src="lesson.image"
-                    alt=""
-                    srcset=""
-                  />
-                </figure>
-
-                <!-- LESSON RATING -->
-                <div
-                  class="rating"
-                  style="
-                    text-align: center;
-                    margin: auto;
-                    margin-top: 10px;
-                    font-size: 18px;
-                    color: #cb8589ff;
-                  "
-                >
-                  <!-- LOOPING THE RATING STARS -->
-                  <span v-for="n in lesson.rating">
-                    <i class="fa-solid fa-star"></i>
-                  </span>
-                </div>
-              </div>
-
-              <!-- lesson details -->
-              <div class="column right lesson-details">
-                <div id="lesson-description">
-                  <p><b>Subject: </b>{{lesson.subject}}</p>
-                  <p><b>Location:</b> {{lesson.location}}</p>
-                  <p><b>Price:</b> ${{lesson.price}}</p>
-                  <p><b>Spaces:</b> {{lesson.space}}</p>
-                </div>
-
-                <div id="button-and-messages" style="margin-top: 20px">
-                  <!-- lesson space messages -->
-                  <div class="space-messages" style="text-align: center">
-                    <!-- if there are 0 spaces left -->
-                    <span v-if="lesson.space === cartCount(lesson.id)"
-                      >All out!</span
-                    >
-                    <!-- if there are 2 or less spaces than that -->
-                    <span v-else-if="lesson.space - cartCount(lesson.id) <= 2">
-                      Only {{lesson.space - cartCount(lesson.id)}} left!
+          <div class="school_lessons" v-if="searchInput== '' ">
+            <div
+              class="lesson-box"
+              v-for="lesson in sortedLessons"
+              id="lesson.id"
+              :key="lesson.id"
+            >
+              <div id="row">
+                <!-- lesson image -->
+                <div class="column left lesson-icon">
+                  <figure>
+                    <img
+                      class="lesson-pic"
+                      v-bind:src="lesson.image"
+                      alt=""
+                      srcset=""
+                    />
+                  </figure>
+                  <!-- LESSON RATING -->
+                  <div
+                    class="rating"
+                    style="
+                      text-align: center;
+                      margin: auto;
+                      margin-top: 10px;
+                      font-size: 18px;
+                      color: #cb8589ff;
+                    "
+                  >
+                    <!-- LOOPING THE RATING STARS -->
+                    <span v-for="n in lesson.rating">
+                      <i class="fa-solid fa-star"></i>
                     </span>
-                    <!-- if there are sufficient spaces -->
-                    <span v-else>Buy now!</span>
                   </div>
-                  <!-- lesson cart button -->
-                  <div class="cart-btn-div">
-                    <!-- if there are spaces available to add to cart  -->
-                    <button
-                      type="button"
-                      v-bind:id="lesson.id"
-                      class="add-to-cart"
-                      v-on:click="addToCart(lesson)"
-                      v-if="canAddToCart(lesson)"
-                    >
-                      <i class="fa fa-cart-plus" aria-hidden="true"></i>
-                    </button>
-                    <!-- if all spaces are over button disabled -->
-                    <button class="add-to-cart" disabled="disabled" v-else>
-                      <i class="fa fa-cart-plus" aria-hidden="true"></i>
-                    </button>
+                </div>
+                <!-- lesson details -->
+                <div class="column right lesson-details">
+                  <div id="lesson-description">
+                    <p><b>Subject: </b>{{lesson.subject}}</p>
+                    <p><b>Location:</b> {{lesson.location}}</p>
+                    <p><b>Price:</b> ${{lesson.price}}</p>
+                    <p><b>Spaces:</b> {{lesson.space}}</p>
+                  </div>
+                  <div id="button-and-messages" style="margin-top: 20px">
+                    <!-- lesson space messages -->
+                    <div class="space-messages" style="text-align: center">
+                      <!-- if there are 0 spaces left -->
+                      <span v-if="lesson.space === cartCount(lesson.id)"
+                        >All out!</span
+                      >
+                      <!-- if there are 2 or less spaces than that -->
+                      <span v-else-if="lesson.space - cartCount(lesson.id) <= 2">
+                        Only {{lesson.space - cartCount(lesson.id)}} left!
+                      </span>
+                      <!-- if there are sufficient spaces -->
+                      <span v-else>Buy now!</span>
+                    </div>
+                    <!-- lesson cart button -->
+                    <div class="cart-btn-div">
+                      <!-- if there are spaces available to add to cart  -->
+                      <button
+                        type="button"
+                        v-bind:id="lesson.id"
+                        class="add-to-cart"
+                        v-on:click="addToCart(lesson)"
+                        v-if="canAddToCart(lesson)"
+                      >
+                        <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                      </button>
+                      <!-- if all spaces are over button disabled -->
+                      <button class="add-to-cart" disabled="disabled" v-else>
+                        <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+
+          <div class="school_lessons" id="search-results_box" v-else>      
+            
+            <div v-for="lesson in filteredLessonList" v-text="lesson"></div>
+            <div
+              class="lesson-box"
+              v-for="lessons in searched_lessons"
+              :key="lessons.id"
+            >
+              <div id="row">
+                <!-- lesson image -->
+                <div class="column left lesson-icon">
+                  <figure>
+                    <img
+                      class="lesson-pic"
+                      v-bind:src="lessons.image"
+                      alt=""
+                      srcset=""
+                    />
+                  </figure>
+                  <!-- LESSON RATING -->
+                  <div
+                    class="rating"
+                    style="
+                      text-align: center;
+                      margin: auto;
+                      margin-top: 10px;
+                      font-size: 18px;
+                      color: #cb8589ff;
+                    "
+                  >
+                    <!-- LOOPING THE RATING STARS -->
+                    <span v-for="n in lessons.rating">
+                      <i class="fa-solid fa-star"></i>
+                    </span>
+                  </div>
+                </div>
+                <!-- lesson details -->
+                <div class="column right lesson-details">
+                  <div id="lesson-description">
+                    <p><b>Subject: </b>{{lessons.subject}}</p>
+                    <p><b>Location:</b> {{lessons.location}}</p>
+                    <p><b>Price:</b> ${{lessons.price}}</p>
+                    <p><b>Spaces:</b> {{lessons.space}}</p>
+                  </div>
+                  <div id="button-and-messages" style="margin-top: 20px">
+                    <!-- lesson space messages -->
+                    <div class="space-messages" style="text-align: center">
+                      <!-- if there are 0 spaces left -->
+                      <span v-if="lessons.space === cartCount(lessons.id)"
+                        >All out!</span
+                      >
+                      <!-- if there are 2 or less spaces than that -->
+                      <span v-else-if="lessons.space - cartCount(lessons.id) <= 2">
+                        Only {{lessons.space - cartCount(lessons.id)}} left!
+                      </span>
+                      <!-- if there are sufficient spaces -->
+                      <span v-else>Buy now!</span>
+                    </div>
+                    <!-- lesson cart button -->
+                    <div class="cart-btn-div">
+                      <!-- if there are spaces available to add to cart  -->
+                      <button
+                        type="button"
+                        v-bind:id="lessons.id"
+                        class="add-to-cart"
+                        v-on:click="addToCart(lessons)"
+                        v-if="canAddToCart(lessons)"
+                      >
+                        <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                      </button>
+                      <!-- if all spaces are over button disabled -->
+                      <button class="add-to-cart" disabled="disabled" v-else>
+                        <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
           </div>
         </div>
 
@@ -356,6 +438,7 @@
         el: "#app",
         data: {
           lessons_list: [], //lessons from lessons collections
+          searched_lessons:[],
           cart: [], //added lessons to the cart
 
           checkout: {
@@ -480,8 +563,6 @@
             if (this.cart.length > 0 && this.checkout.error_message == "") {
               alert("Order Submitted!");
               addOrder(this.checkout.name,this.checkout.phone_number,this.cart);
-              
-              // location.reload();
             }
             // if there are no items in the cart
             else if (this.cart.length == 0) {
@@ -514,6 +595,7 @@
                       body: JSON.stringify(orderData),
                   }).then(response => response.text()).then(responseJSON => {
                       updateLessons(orderedItems);
+                      location.reload();
                   });
                 
               
@@ -583,7 +665,7 @@
                 } else if (type == "price") {
                   if (a.price > b.price) return 1;
                   if (a.price < b.price) return -1;
-                } else {
+                } else if (type == "space"){
                   if (a.space > b.space) return 1;
                   if (a.space < b.space) return -1;
                 }
@@ -599,7 +681,7 @@
                 } else if (type == "price") {
                   if (a.price < b.price) return 1;
                   if (a.price > b.price) return -1;
-                } else {
+                } else if (type == "space"){
                   if (a.space < b.space) return 1;
                   if (a.space > b.space) return -1;
                 }
@@ -610,18 +692,26 @@
           },
 
           //   search function
-          filteredLessonList: function () {
-            console.log(this.sortedLessons);
-            return this.sortedLessons.filter((post) => {
-              return (
-                post.subject
-                  .toLowerCase()
-                  .includes(this.searchInput.toLowerCase()) ||
-                post.location
-                  .toLowerCase()
-                  .includes(this.searchInput.toLowerCase())
-              );
-            });
+          filteredLessonList: function() {
+            var search=this.searchInput.toLowerCase()
+            console.log(this.searchInput);
+            var searchresults=[];
+            
+            if(this.searchInput!=''){
+                fetch("http://localhost:3000/collection/lessons/"+search).then(function (
+                response
+              ) {
+                response.json().then(function (json) {
+                  // save the returned JSON object to 'school.lessons';
+                  
+                  app.searched_lessons = JSON.parse(JSON.stringify(json));
+                  searchresults.push(json);
+                  console.log(app.searched_lessons);
+                  console.log(json)
+                  return json;
+                });
+              });   
+            } 
           },
         },
       });
