@@ -1,7 +1,8 @@
+// Requires the modules needed
+
 var express = require("express");
 var app = express();
 var cors = require('cors')
-// Requires the modules needed
 var path = require("path");
 var fs = require("fs");
 const MongoClient = require("mongodb").MongoClient;
@@ -14,12 +15,13 @@ app.set('port', 3000)
 //logger middleware. Logs all the incoming requests
 app.use(function(req, res, next) {
     console.log("In comes a " + req.method + " request to " + req.url);
-    next();
-})
-app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     next();
-});
+})
+// app.use((req, res, next) => {
+    
+//     next();
+// });
 
 let db;
 MongoClient.connect(
@@ -57,6 +59,16 @@ app.post("/collection/:collectionName", (req, res, next) => {
   });
 });
 
+app.get("/collection/:collectionName/:search", (req, res, next) => {
+  console.log(req.params.search);
+  // //Create a PHP array with our search criteria
+  req.collection.find({$or: [ {subject: { $regex: '^'+req.params.search, $options: "i" }}, {location: { $regex: '^'+req.params.search, $options: "i" }}]}).toArray((e, results) => {
+    if (e) return next(e);
+    console.log(results);
+    res.send(JSON.parse(JSON.stringify(results)));
+  });
+});
+
 
 const ObjectID = require('mongodb').ObjectID;
 //GET request to find a collection with a given ID
@@ -78,14 +90,6 @@ app.put("/collection/:collectionName/:id", (req, res, next) => {
     }
   );
 });
-
-
-app.get('/collection/:collectionName/:search', (req, res, next) => {
-  req.collection.findOne({ subject: new ObjectID(req.params.id) }, (e, result) => {
-  if (e) return next(e)
-  res.send(result)
-  })
-  })
 
 
 // static file middlewear
