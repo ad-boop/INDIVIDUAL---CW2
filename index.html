@@ -562,6 +562,8 @@
             // if there are items in the cart
             if (this.cart.length > 0 && this.checkout.error_message == "") {
               alert("Order Submitted!");
+              console.log(this.cart);
+              
               addOrder(this.checkout.name,this.checkout.phone_number,this.cart);
             }
             // if there are no items in the cart
@@ -579,7 +581,25 @@
 
 
             function addOrder(name,phone_number,orderedItems){
-              let orderData = {"name":name,"phone_number":phone_number,"orderedItems":orderedItems};
+              var ordered_items = [];
+              var count = 1;
+              for (i = 0; i<orderedItems.length; i++){
+                  if(orderedItems[i] == orderedItems[i+1]){
+                      count ++;
+                      continue;
+                  } else {
+                      ordered_items.push({
+                          id: orderedItems[i].id,
+                          subject:orderedItems[i].subject,
+                          location:orderedItems[i].location,
+                          price:orderedItems[i].price*count,
+                          count: count
+                      });
+                      count = 1;
+                  }
+              }
+              console.log(ordered_items);
+              let orderData = {"name":name,"phone_number":phone_number,"orderedItems":ordered_items};
               
               //POST request to add the order to the database.
             
