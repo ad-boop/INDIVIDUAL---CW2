@@ -6,28 +6,3 @@ Github Pages Link:
 https://ad-boop.github.io/CW-1-Cst3145-/
 
 
-Individual task (25%):
-Marking Criteria
-•MongoDB (4%)
-oHave a MongoDB collection for lesson information -minimal fields: topic, price,location, and space (2%).
-oHave a MongoDB collection for order information (2%) -minimal fields: name,phone number, lesson ID, and number of spaces.
-•Middleware(4%)oCreate a ‘logger’ middleware that output all requests to the server console (2%)
-. oCreate a static file middleware that returns lesson images,or an error message if the image file does not exist (2%).
-•REST API (8%)
-
-oA GET route that returns all the lessons (2%). 
-oA POST route that saves a new order to the ‘order’ collection (2%).
-oA PUT route that updates the number of available spaces in the‘lesson’ collectionafter an order is submitted (2%).
-oAt least one Postman request is created for each route(2%).•Fetch (4%)oA fetch that retrieves all the lessons with GET(1%).
-oA fetch that saves a new order with POST after it is submitted(1%).oA fetch that updates the available lesson space with PUT after an order is submitted(2%).
-
-Extra Challenge
-•Search (5%)oThis is the challenge component of this coursework, and it is notexpected that everyone can complete it. 
-The solution is not covered in the lecture or lab, so youneed to research it.oThe goal is to add a full-text search feature,similarlyto the challenge component of Coursework 1. T
-he difference is that here the search needs to be performed in the back end (Express + MongoDB), not in the front end as in Coursework 1 
-(where it was implemented via Vue + JavaScript). oYou cannot use any existing library to implement this function
-.oFetch (2%): in the front end, a ‘fetch’ request should be created to send the search information to the back end.
-oExpress API (2%): an Express.js route should be created to handle the searchrequest and return the search results from MongoDB.
-oSearch as you type (1%): similarlyto Coursework 1, there is also thismark if the search supports ‘search as you type’, 
-i.e. the search starts when the user types the first letter (displaying all the lessons containingthat letter) and the result list is 
-filteredas more search letters are entered (similar to Google search).
