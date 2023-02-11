@@ -168,7 +168,6 @@
             <div
               class="lesson-box"
               v-for="lesson in sortedLessons"
-              id="lesson.id"
               :key="lesson.id"
             >
               <div id="row">
@@ -607,11 +606,7 @@
                       method: 'POST',
                       headers: {
                           "Content-Type": "application/json",
-                          // "Access-Control-Allow-Origin": "*",
-                          // "Access-Control-Allow-Methods": "POST",
-                          // "Access-Control-Allow-Credentials": true
                       },
-                      // mode:"no-cors",
                       body: JSON.stringify(orderData),
                   }).then(response => response.text()).then(responseJSON => {
                       updateLessons(orderedItems);
@@ -630,10 +625,8 @@
                     const error="Cant do it";
                 }
                 else{
-                    const lessons_items={"_id":lessons[i]._id,"space":lessons[i].space}
-                    console.log(lessons_items)
-                    // const id=new ObjectID(lessons[i]._id);
-                    // updateLessons.push(lessons_items);
+                    // const lessons_items={"_id":lessons[i]._id,"space":lessons[i].space}
+                    // console.log(lessons_items)
 
                     //POST request to add the order to the database.
                     fetch("http://localhost:3000/collection/lessons/"+lessons[i]._id, {
@@ -715,19 +708,17 @@
           filteredLessonList: function() {
             var search=this.searchInput.toLowerCase()
             console.log(this.searchInput);
-            var searchresults=[];
             
             if(this.searchInput!=''){
                 fetch("http://localhost:3000/collection/lessons/"+search).then(function (
                 response
               ) {
                 response.json().then(function (json) {
-                  // save the returned JSON object to 'school.lessons';
                   
+                  // saving the filteredd lessons to searched_liessons
                   app.searched_lessons = JSON.parse(JSON.stringify(json));
-                  searchresults.push(json);
+                  
                   console.log(app.searched_lessons);
-                  console.log(json)
                   return json;
                 });
               });   
