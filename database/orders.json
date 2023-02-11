@@ -1,0 +1,56 @@
+[{
+  "_id": {
+    "$oid": "63e3d4cff5f8e71b48886173"
+  },
+  "name": "adora",
+  "phone_number": "971569600946",
+  "orderedItems": [
+    {
+      "subject": "Volley Ball",
+      "location": "London",
+      "price": 290,
+      "count": 2
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "63e4aec5d625741ee070bd60"
+  },
+  "name": "charu",
+  "phone_number": "12345969707",
+  "orderedItems": [
+    {
+      "subject": "Music",
+      "location": "Bristol",
+      "price": 120,
+      "count": 1
+    },
+    {
+      "subject": "Science",
+      "location": "Ofxord",
+      "price": 150,
+      "count": 1
+    },
+    {
+      "subject": "Photography",
+      "location": "Oxford",
+      "price": 340,
+      "count": 2
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "63e4b2d062ad584236664752"
+  },
+  "name": "adrea",
+  "phone_number": "499050069977",
+  "orderedItems": [
+    {
+      "id": "63d39d25f1b2c3a901476973",
+      "subject": "Basket Ball",
+      "location": "York",
+      "price": 190,
+      "count": 1
+    }
+  ]
+}]
