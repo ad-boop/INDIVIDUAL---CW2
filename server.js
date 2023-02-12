@@ -14,7 +14,8 @@ app.set('port', 3000)
 
 //logger middleware. Logs all the incoming requests
 app.use(function(req, res, next) {
-    console.log("In comes a " + req.method + " request to " + req.url);
+    console.log("In comes a " + req.method + " with Request IP: " + req.url);
+    console.log("Request date: " + new Date());
     res.setHeader('Access-Control-Allow-Origin', '*');
     next();
 })
