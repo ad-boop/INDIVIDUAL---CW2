@@ -160,7 +160,6 @@
           </div>
         </div>
 
-        
         <!---------------------------------- Lessons display SECTION---------------------------------- -->
         <div class="lessons-div" id="lessons-div" v-if="showLessons">
           <!-- lesson product boxess -->
@@ -214,7 +213,9 @@
                         >All out!</span
                       >
                       <!-- if there are 2 or less spaces than that -->
-                      <span v-else-if="lesson.space - cartCount(lesson.id) <= 2">
+                      <span
+                        v-else-if="lesson.space - cartCount(lesson.id) <= 2"
+                      >
                         Only {{lesson.space - cartCount(lesson.id)}} left!
                       </span>
                       <!-- if there are sufficient spaces -->
@@ -243,8 +244,7 @@
             </div>
           </div>
 
-          <div class="school_lessons" id="search-results_box" v-else>      
-            
+          <div class="school_lessons" id="search-results_box" v-else>
             <div v-for="lesson in filteredLessonList" v-text="lesson"></div>
             <div
               class="lesson-box"
@@ -295,7 +295,9 @@
                         >All out!</span
                       >
                       <!-- if there are 2 or less spaces than that -->
-                      <span v-else-if="lessons.space - cartCount(lessons.id) <= 2">
+                      <span
+                        v-else-if="lessons.space - cartCount(lessons.id) <= 2"
+                      >
                         Only {{lessons.space - cartCount(lessons.id)}} left!
                       </span>
                       <!-- if there are sufficient spaces -->
@@ -322,7 +324,6 @@
                 </div>
               </div>
             </div>
-  
           </div>
         </div>
 
@@ -437,7 +438,7 @@
         el: "#app",
         data: {
           lessons_list: [], //lessons from lessons collections
-          searched_lessons:[],
+          searched_lessons: [],
           cart: [], //added lessons to the cart
 
           checkout: {
@@ -562,8 +563,12 @@
             if (this.cart.length > 0 && this.checkout.error_message == "") {
               alert("Order Submitted!");
               console.log(this.cart);
-              
-              addOrder(this.checkout.name,this.checkout.phone_number,this.cart);
+
+              addOrder(
+                this.checkout.name,
+                this.checkout.phone_number,
+                this.cart
+              );
             }
             // if there are no items in the cart
             else if (this.cart.length == 0) {
@@ -578,68 +583,72 @@
               this.checkout.phone_number = "";
             }
 
-
-            function addOrder(name,phone_number,orderedItems){
+            function addOrder(name, phone_number, orderedItems) {
               var ordered_items = [];
               var count = 1;
-              for (i = 0; i<orderedItems.length; i++){
-                  if(orderedItems[i] == orderedItems[i+1]){
-                      count ++;
-                      continue;
-                  } else {
-                      ordered_items.push({
-                          id: orderedItems[i].id,
-                          subject:orderedItems[i].subject,
-                          location:orderedItems[i].location,
-                          price:orderedItems[i].price*count,
-                          count: count
-                      });
-                      count = 1;
-                  }
+              for (i = 0; i < orderedItems.length; i++) {
+                if (orderedItems[i] == orderedItems[i + 1]) {
+                  count++;
+                  continue;
+                } else {
+                  ordered_items.push({
+                    id: orderedItems[i]._id,
+                    subject: orderedItems[i].subject,
+                    location: orderedItems[i].location,
+                    price: orderedItems[i].price * count,
+                    count: count,
+                  });
+                  count = 1;
+                }
               }
               console.log(ordered_items);
-              let orderData = {"name":name,"phone_number":phone_number,"orderedItems":ordered_items};
-              
+              let orderData = {
+                name: name,
+                phone_number: phone_number,
+                orderedItems: ordered_items,
+              };
+
               //POST request to add the order to the database.
-            
-                fetch("http://localhost:3000/collection/orders", {
-                      method: 'POST',
-                      headers: {
-                          "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify(orderData),
-                  }).then(response => response.text()).then(responseJSON => {
-                      updateLessons(orderedItems);
-                      location.reload();
-                  });
-                
-              
+
+              fetch("http://localhost:3000/collection/orders", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(orderData),
+              })
+                .then((response) => response.text())
+                .then((responseJSON) => {
+                  updateLessons(orderedItems);
+                  location.reload();
+                });
             }
 
-            function updateLessons(lessons){
-
-              const updatedLessons=[];
-              for(i=0;i<lessons.length;i++){
+            function updateLessons(lessons) {
+              const updatedLessons = [];
+              for (i = 0; i < lessons.length; i++) {
                 console.log(lessons);
-                if(lessons.length===0){
-                    const error="Cant do it";
+                if (lessons.length === 0) {
+                  const error = "Cant do it";
+                } else {
+                  //POST request to add the order to the database.
+                  fetch(
+                    "http://localhost:3000/collection/lessons/" +
+                      lessons[i]._id,
+                    {
+                      method: "PUT",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ space: lessons[i].space }),
+                    }
+                  )
+                    .then((response) => response.json())
+                    .then((responseJSON) => {
+                      // console.log(orderData);
+                    });
                 }
-                else{
-                    // const lessons_items={"_id":lessons[i]._id,"space":lessons[i].space}
-                    // console.log(lessons_items)
-
-                    //POST request to add the order to the database.
-                    fetch("http://localhost:3000/collection/lessons/"+lessons[i]._id, {
-                          method: 'PUT',
-                          headers: {
-                            "Content-Type": "application/json",
-                          },
-                          body: JSON.stringify({"space":lessons[i].space}),
-                        }).then(response => response.json()).then(responseJSON => {
-                          // console.log(orderData);
-                        });
-                      }
-                }
+              }
               console.log(updateLessons);
             }
           },
@@ -678,7 +687,7 @@
                 } else if (type == "price") {
                   if (a.price > b.price) return 1;
                   if (a.price < b.price) return -1;
-                } else if (type == "space"){
+                } else if (type == "space") {
                   if (a.space > b.space) return 1;
                   if (a.space < b.space) return -1;
                 }
@@ -694,7 +703,7 @@
                 } else if (type == "price") {
                   if (a.price < b.price) return 1;
                   if (a.price > b.price) return -1;
-                } else if (type == "space"){
+                } else if (type == "space") {
                   if (a.space < b.space) return 1;
                   if (a.space > b.space) return -1;
                 }
@@ -705,24 +714,23 @@
           },
 
           //   search function
-          filteredLessonList: function() {
-            var search=this.searchInput.toLowerCase()
+          filteredLessonList: function () {
+            var search = this.searchInput.toLowerCase();
             console.log(this.searchInput);
-            
-            if(this.searchInput!=''){
-                fetch("http://localhost:3000/collection/lessons/"+search).then(function (
-                response
-              ) {
-                response.json().then(function (json) {
-                  
-                  // saving the filteredd lessons to searched_liessons
-                  app.searched_lessons = JSON.parse(JSON.stringify(json));
-                  
-                  console.log(app.searched_lessons);
-                  return json;
-                });
-              });   
-            } 
+
+            if (this.searchInput != "") {
+              fetch("http://localhost:3000/collection/lessons/" + search).then(
+                function (response) {
+                  response.json().then(function (json) {
+                    // saving the filteredd lessons to searched_liessons
+                    app.searched_lessons = JSON.parse(JSON.stringify(json));
+
+                    console.log(app.searched_lessons);
+                    return json;
+                  });
+                }
+              );
+            }
           },
         },
       });
