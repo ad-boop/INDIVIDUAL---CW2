@@ -245,8 +245,7 @@
           </div>
 
           <div class="school_lessons" id="search-results_box" v-else>      
-            
-            <div v-for="lesson in filteredLessonList" v-text="lesson"></div>
+
             <div
               class="lesson-box"
               v-for="lessons in filteredLessonList"
@@ -733,7 +732,9 @@
                 });
               });   
             } 
+            return app.searched_lessons;
           },
+          
         },
       });
     </script>
