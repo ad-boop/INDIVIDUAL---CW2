@@ -245,10 +245,10 @@
 
           <div class="school_lessons" id="search-results_box" v-else>      
             
-            <div v-for="lesson in filteredLessonList" v-text="lesson"></div>
+            <!-- <div v-for="lesson in filteredLessonList" v-text="lesson"></div> -->
             <div
               class="lesson-box"
-              v-for="lessons in searched_lessons"
+              v-for="lessons in filteredLessonList"
               :key="lessons.id"
             >
               <div id="row">
@@ -716,13 +716,13 @@
                 response.json().then(function (json) {
                   
                   // saving the filteredd lessons to searched_liessons
-                  app.searched_lessons = JSON.parse(JSON.stringify(json));
+                  app.searched_lessons = json;
                   
                   console.log(app.searched_lessons);
-                  return json;
                 });
               });   
             } 
+            return app.searched_lessons;
           },
         },
       });
