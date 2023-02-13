@@ -17,7 +17,7 @@ app.use(function(req, res, next) {
     console.log("In comes a " + req.method + " with Request IP: " + req.url);
     console.log("Request date: " + new Date());
     res.setHeader('Access-Control-Allow-Origin', '*');
-    next();
+    next(); //stops browser from hanging
 })
 
 // static file middlewear
